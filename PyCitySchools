@@ -11,3 +11,42 @@ student_data = pd.read_csv(student_data_to_load)
 
 # Combine the data into a single dataset
 school_data_complete = pd.merge(student_data, school_data, how="left", on=["school_name", "school_name"])
+
+# Calculate the total number of schools
+total_school = len(school_data_complete['school_name'].unique())
+
+# Calculate the total number of students
+total_student = school_data_complete['student_name'].count()
+
+# Calculate the total budget
+total_budget = sum(school_data_complete['budget'].unique())
+
+# Calculate the average math score
+average_math_score = school_data_complete['math_score'].mean()
+
+# Calculate the average reading score
+average_reading_score = school_data_complete['reading_score'].mean()
+
+# Calculate the overall passing rate
+overall_passing_score = (average_math_score + average_reading_score)/2
+
+# Calculate the percentage of students with a passing math score (70 or greater)
+passing_math_score = (school_data_complete[school_data_complete['math_score']>=70]['student_name'].count()/total_student)*100
+
+# Calculate the percentage of students with a passing reading score (70 or greater)
+passing_reading_score = (school_data_complete[school_data_complete['reading_score']>=70]['student_name'].count()/total_student)*100
+
+# Create a dataframe to hold the above results and formatting
+district = {
+    'Total Schools':total_school,
+    'Total Student':'{:,}'.format(total_student),
+    'Total Budget':'${:,.2f}'.format(total_budget),
+    'Average Math Score':average_math_score,
+    'Average Reading Score':average_reading_score,
+    '% Passing Math':passing_math_score,
+    '% Passing Reading':passing_reading_score,
+    '% Overall Passing Rate':[overall_passing_score],  
+}
+
+district_summary = pd.DataFrame(district)
+district_summary

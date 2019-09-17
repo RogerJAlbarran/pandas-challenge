@@ -50,3 +50,51 @@ district = {
 
 district_summary = pd.DataFrame(district)
 district_summary
+
+#school summary
+group_school = school_data_complete.groupby("school_name")
+
+#school_type = group_school["type"].unique()
+students = group_school["student_name"].count()
+
+school_budget = group_school["budget"].mean()
+
+school_type = [s_type[0] for s_type in group_school["type"].unique()]
+
+
+pass_math_school = school_data_complete.loc[school_data_complete["math_score"] >= 70]
+math_group = pass_math_school.groupby("school_name")
+
+
+pass_reading_school = school_data_complete.loc[school_data_complete["reading_score"] >= 70]
+reading_group = pass_reading_school.groupby("school_name")
+
+school_summary_table = pd.DataFrame({"School Type": school_type,
+                                    "Total Students": students,
+                                    "Total School Budget": school_budget,
+                                    "Per Student Budget": (group_school["budget"].mean())/(group_school["student_name"].count()),
+                                    "Average Math Score": (group_school["math_score"].mean()),
+                                    "Average Reading Score": (group_school["reading_score"].mean()),
+                                    "% Passing Math": (math_group["student_name"].count())/(group_school["student_name"].count())*100,
+                                    "% Passing Reading": (reading_group["student_name"].count())/(group_school["student_name"].count())*100,
+                                    "% Overall Passing Rate": (reading_group["student_name"].count()+math_group["student_name"].count())/(2*group_school["student_name"].count())*100
+                                    })
+
+                                    
+school_summary_table["Per Student Budget"] = school_summary_table["Per Student Budget"].astype(float).map("${:,.2f}".format)
+school_summary_table["Total School Budget"] = school_summary_table["Total School Budget"].astype(float).map("${:,.2f}".format)                                   
+                                   
+
+
+
+best_schools = school_summary_table.sort_values(["% Overall Passing Rate"], ascending=False)
+best_schools.reset_index(inplace=False)
+
+best_schools.index.name = None
+best_schools.head()
+
+#List of bottom schools
+worst_schools = school_summary_table.sort_values(["% Overall Passing Rate"], ascending=True)
+worst_schools.reset_index(inplace=False)
+worst_schools.index.name = None
+worst_schools.head()

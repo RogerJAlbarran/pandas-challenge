@@ -1,3 +1,7 @@
+Observable trends from the below data
+#1) Greater spending did not show that scores in math and reading would be higher. This suggests that increase in budgets cannot be the only solution to school improvement. 
+#2) The comparison of type of schools shows that Charter schools have a higher overall passing rating (90% compared to under 54%). This raises the question of what are Charter schools doing in order to achieve high scores. 
+
 # Dependencies and Setup
 import pandas as pd
 

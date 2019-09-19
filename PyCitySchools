@@ -98,3 +98,27 @@ worst_schools = school_summary_table.sort_values(["% Overall Passing Rate"], asc
 worst_schools.reset_index(inplace=False)
 worst_schools.index.name = None
 worst_schools.head()
+
+#Math scores for each grade
+freshmen = school_data_complete.loc[school_data_complete["grade"] == "9th"]
+frosh_group = freshmen.groupby("school_name")
+frosh_avg = frosh_group.mean()
+sophomore = school_data_complete.loc[school_data_complete["grade"] == "10th"]
+soph_group = sophomore.groupby("school_name")
+soph_avg = soph_group.mean()
+
+juniors = school_data_complete.loc[school_data_complete["grade"] == "11th"]
+jrs_group = juniors.groupby("school_name")
+jrs_avg = jrs_group.mean()
+seniors = school_data_complete.loc[school_data_complete["grade"] == "12th"]
+srs_group = seniors.groupby("school_name")
+srs_avg = srs_group.mean()
+
+grade_summary_under = pd.merge(frosh_avg, soph_avg, on="school_name", suffixes=("_fr", "_soph"))
+grade_summary_upper = pd.merge(jrs_avg, srs_avg, on="school_name", suffixes=("_jrs", "_srs"))
+grade_summary_total = pd.merge(grade_summary_under, grade_summary_upper, on="school_name")
+
+just_math = grade_summary_total[["math_score_fr", "math_score_soph", "math_score_jrs", "math_score_srs"]]
+renamed_math = just_math.rename(columns={"math_score_fr": "9th", "math_score_soph": "10th", "math_score_jrs": "11th", "math_score_srs": "12th"})
+renamed_math.index.name = None
+renamed_math

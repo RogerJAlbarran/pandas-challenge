@@ -52,6 +52,7 @@ district_summary = pd.DataFrame(district)
 district_summary
 
 #school summary
+
 group_school = school_data_complete.groupby("school_name")
 
 #school_type = group_school["type"].unique()
@@ -94,12 +95,14 @@ best_schools.index.name = None
 best_schools.head()
 
 #List of bottom schools
+
 worst_schools = school_summary_table.sort_values(["% Overall Passing Rate"], ascending=True)
 worst_schools.reset_index(inplace=False)
 worst_schools.index.name = None
 worst_schools.head()
 
 #Math scores for each grade
+
 freshmen = school_data_complete.loc[school_data_complete["grade"] == "9th"]
 frosh_group = freshmen.groupby("school_name")
 frosh_avg = frosh_group.mean()
@@ -122,3 +125,26 @@ just_math = grade_summary_total[["math_score_fr", "math_score_soph", "math_score
 renamed_math = just_math.rename(columns={"math_score_fr": "9th", "math_score_soph": "10th", "math_score_jrs": "11th", "math_score_srs": "12th"})
 renamed_math.index.name = None
 renamed_math
+
+# Reading score grades
+
+# Calculate the average reading score for students of 9th grade at each school
+school_avg_reading_9th = school_data_complete[school_data_complete['grade']=='9th'].groupby('school_name')['reading_score'].mean()
+# Calculate the average reading score for students of 10th grade at each school
+school_avg_reading_10th = school_data_complete[school_data_complete['grade']=='10th'].groupby('school_name')['reading_score'].mean()
+# Calculate the average reading score for students of 11th grade at each school
+school_avg_reading_11th = school_data_complete[school_data_complete['grade']=='11th'].groupby('school_name')['reading_score'].mean()
+# Calculate the average reading score for students of 12th grade at each school
+school_avg_reading_12th = school_data_complete[school_data_complete['grade']=='12th'].groupby('school_name')['reading_score'].mean()
+
+# Create a dataframe to hold the above results
+grade_reading_score={
+    '9th':school_avg_reading_9th,
+    '10th':school_avg_reading_10th,
+    '11th':school_avg_reading_11th,
+    '12th':school_avg_reading_12th,
+    }
+
+reading_score_by_grade = pd.DataFrame(grade_reading_score)
+reading_score_by_grade.index.name = None
+reading_score_by_grade.head(20)
